@@ -106,6 +106,7 @@
     (setq org-table-sticky-header--last-win-start start-pos)
     (org-table-sticky-header--fetch-header)))
 
+;;;###autoload
 (define-minor-mode org-table-sticky-header-mode
   "Sticky header for org-mode tables."
   nil " OTSH" nil
