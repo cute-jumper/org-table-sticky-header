@@ -61,13 +61,15 @@
   "Sticky header for org-mode tables."
   nil " OTSH" nil
   (if org-table-sticky-header-mode
-      (if (not (derived-mode-p 'org-mode))
-          (error "Not in `org-mode'")
-        (setq otsh--old-header-line-format header-line-format)
-        (add-hook 'window-scroll-functions
-                  'otsh--scroll-function 'append 'local)
-        (setq otsh--last-win-start (window-start))
-        (otsh--fetch-header))
+      (if (derived-mode-p 'org-mode)
+          (progn
+            (setq otsh--old-header-line-format header-line-format)
+            (add-hook 'window-scroll-functions
+                      'otsh--scroll-function 'append 'local)
+            (setq otsh--last-win-start (window-start))
+            (otsh--fetch-header))
+        (setq org-table-sticky-header-mode nil)
+        (error "Not in `org-mode'"))
     (remove-hook 'window-scroll-functions 'otsh--scroll-function 'local)
     (setq header-line-format otsh--old-header-line-format)))
 
