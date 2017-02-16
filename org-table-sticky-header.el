@@ -58,10 +58,11 @@
     (otsh--fetch-header)))
 
 (define-minor-mode org-table-sticky-header-mode
-  "Minor mode to show the `org-mode' table header in header line."
+  "Sticky header for org-mode tables."
   nil " OTSH" nil
   (if org-table-sticky-header-mode
-      (progn
+      (if (not (derived-mode-p 'org-mode))
+          (error "Not in `org-mode'")
         (setq otsh--old-header-line-format header-line-format)
         (add-hook 'window-scroll-functions
                   'otsh--scroll-function 'append 'local)
