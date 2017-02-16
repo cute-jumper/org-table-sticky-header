@@ -1,0 +1,20 @@
+#+TITLE: org-table-stikcy-header-mode
+
+A minor mode to show the sticky header for org-mode tables.
+
+* Overview
+  Similar to =semantic-stickyfunc-mode=, this package uses the header line to
+  show the table header when it is out of sight.
+
+* Installation
+
+  To install manually:
+  : (add-to-list 'loat-path "/path/to/org-table-sticky-header.el")
+
+  To use it, =M-x org-table-sticky-header-mode= in the org-mode buffer.
+
+  To enable it automatically in all org-mode buffers, use
+  : (add-hook 'org-mode-hook 'org-table-sticky-header-mode)
+
+* Demo
+  [[./screenshots/demo.gif]]
