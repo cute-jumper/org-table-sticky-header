@@ -46,6 +46,7 @@
 (defun otsh--fetch-header ()
   (if (otsh-org-table-header-visible-p)
       (setq header-line-format otsh--old-header-line-format)
+    ;; stole from `semantic-stickyfunc-mode'
     (setq header-line-format
           '(:eval (list
                    (propertize " " 'display '((space :align-to 0)))
@@ -69,7 +70,6 @@
         (otsh--fetch-header))
     (remove-hook 'window-scroll-functions 'otsh--scroll-function 'local)
     (setq header-line-format otsh--old-header-line-format)))
-
 
 (provide 'org-table-sticky-header)
 ;;; org-table-sticky-header.el ends here
