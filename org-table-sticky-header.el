@@ -4,6 +4,7 @@
 
 ;; Author: Junpeng Qiu <qjpchmail@gmail.com>
 ;; Keywords: extensions
+;; Package-Requires: ((org "9.0.5"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -24,18 +25,20 @@
 
 ;;; Code:
 
-(defvar otsh--last-win-start -1)
-(defvar otsh--old-header-line-format nil)
+(require 'org)
 
-(defun otsh-org-table-header-visible-p ()
+(defvar org-table-sticky-header--last-win-start -1)
+(defvar org-table-sticky-header--old-header-line-format nil)
+
+(defun org-table-sticky-header-org-table-header-visible-p ()
   (save-excursion
-    (goto-char otsh--last-win-start)
+    (goto-char org-table-sticky-header--last-win-start)
     (>= (org-table-begin) (point))))
 
-(defun otsh-get-org-table-header ()
+(defun org-table-sticky-header-get-org-table-header ()
   (let ((col (window-hscroll)))
     (save-excursion
-      (goto-char otsh--last-win-start)
+      (goto-char org-table-sticky-header--last-win-start)
       (if (bobp)
           ""
         (if (org-at-table-p 'any)
@@ -43,19 +46,19 @@
           (forward-line -1))
         (buffer-substring-no-properties (+ (point-at-bol) col) (point-at-eol))))))
 
-(defun otsh--fetch-header ()
-  (if (otsh-org-table-header-visible-p)
-      (setq header-line-format otsh--old-header-line-format)
+(defun org-table-sticky-header--fetch-header ()
+  (if (org-table-sticky-header-org-table-header-visible-p)
+      (setq header-line-format org-table-sticky-header--old-header-line-format)
     ;; stole from `semantic-stickyfunc-mode'
     (setq header-line-format
           '(:eval (list
                    (propertize " " 'display '((space :align-to 0)))
-                   (otsh-get-org-table-header))))))
+                   (org-table-sticky-header-get-org-table-header))))))
 
-(defun otsh--scroll-function (win start-pos)
-  (unless (= otsh--last-win-start start-pos)
-    (setq otsh--last-win-start start-pos)
-    (otsh--fetch-header)))
+(defun org-table-sticky-header--scroll-function (win start-pos)
+  (unless (= org-table-sticky-header--last-win-start start-pos)
+    (setq org-table-sticky-header--last-win-start start-pos)
+    (org-table-sticky-header--fetch-header)))
 
 (define-minor-mode org-table-sticky-header-mode
   "Sticky header for org-mode tables."
@@ -63,15 +66,15 @@
   (if org-table-sticky-header-mode
       (if (derived-mode-p 'org-mode)
           (progn
-            (setq otsh--old-header-line-format header-line-format)
+            (setq org-table-sticky-header--old-header-line-format header-line-format)
             (add-hook 'window-scroll-functions
-                      'otsh--scroll-function 'append 'local)
-            (setq otsh--last-win-start (window-start))
-            (otsh--fetch-header))
+                      'org-table-sticky-header--scroll-function 'append 'local)
+            (setq org-table-sticky-header--last-win-start (window-start))
+            (org-table-sticky-header--fetch-header))
         (setq org-table-sticky-header-mode nil)
         (error "Not in `org-mode'"))
-    (remove-hook 'window-scroll-functions 'otsh--scroll-function 'local)
-    (setq header-line-format otsh--old-header-line-format)))
+    (remove-hook 'window-scroll-functions 'org-table-sticky-header--scroll-function 'local)
+    (setq header-line-format org-table-sticky-header--old-header-line-format)))
 
 (provide 'org-table-sticky-header)
 ;;; org-table-sticky-header.el ends here
