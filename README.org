@@ -9,7 +9,7 @@ A minor mode to show the sticky header for org-mode tables.
 * Usage
 
   To install manually:
-  : (add-to-list 'loat-path "/path/to/org-table-sticky-header.el")
+  : (add-to-list 'load-path "/path/to/org-table-sticky-header.el")
 
   =M-x org-table-sticky-header-mode= to enable the minor mode in an org-mode
   buffer.
