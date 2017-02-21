@@ -1,4 +1,5 @@
 #+TITLE: org-table-stikcy-header-mode
+[[https://melpa.org/#/org-table-sticky-header][file:https://melpa.org/packages/org-table-sticky-header-badge.svg]]
 
 A minor mode to show the sticky header for org-mode tables.
 

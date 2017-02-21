@@ -38,7 +38,13 @@
 ;; 3 Demo
 
 
+;; [[file:https://melpa.org/packages/org-table-sticky-header-badge.svg]]
+
 ;; A minor mode to show the sticky header for org-mode tables.
+
+
+;; [[file:https://melpa.org/packages/org-table-sticky-header-badge.svg]]
+;; https://melpa.org/#/org-table-sticky-header
 
 
 ;; 1 Overview
@@ -53,7 +59,7 @@
 
 ;;   To install manually:
 ;;   ,----
-;;   | (add-to-list 'loat-path "/path/to/org-table-sticky-header.el")
+;;   | (add-to-list 'load-path "/path/to/org-table-sticky-header.el")
 ;;   `----
 
 ;;   `M-x org-table-sticky-header-mode' to enable the minor mode in an
