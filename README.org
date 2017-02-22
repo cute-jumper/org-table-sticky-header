@@ -8,6 +8,7 @@ A minor mode to show the sticky header for org-mode tables.
   show the table header when it is out of sight.
 
 * Usage
+  Recommend: install from melpa.
 
   To install manually:
   : (add-to-list 'load-path "/path/to/org-table-sticky-header.el")

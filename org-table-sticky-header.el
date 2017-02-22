@@ -89,7 +89,8 @@
     (>= (org-table-begin) (point))))
 
 (defun org-table-sticky-header-get-org-table-header ()
-  (let ((col (window-hscroll)))
+  (let ((col (window-hscroll))
+        visual-header)
     (save-excursion
       (goto-char org-table-sticky-header--last-win-start)
       (if (bobp)
@@ -97,7 +98,13 @@
         (if (org-at-table-p 'any)
             (goto-char (org-table-begin))
           (forward-line -1))
-        (buffer-substring-no-properties (+ (point-at-bol) col) (point-at-eol))))))
+        (setq visual-header
+              (buffer-substring (+ (point-at-bol) col) (point-at-eol)))
+        (remove-text-properties 0
+                                (length visual-header)
+                                '(face nil)
+                                visual-header)
+        visual-header))))
 
 (defun org-table-sticky-header--fetch-header ()
   (if (org-table-sticky-header-org-table-header-visible-p)
