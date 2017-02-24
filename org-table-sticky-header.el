@@ -83,10 +83,32 @@
 (defvar org-table-sticky-header--last-win-start -1)
 (defvar org-table-sticky-header--old-header-line-format nil)
 
+(defun org-table-sticky-header--is-header-p (line)
+  (not
+   (or (string-match "^ *|-" line)
+       (let ((cells (split-string line "|"))
+             (ret t))
+         (catch 'break
+           (dolist (c cells ret)
+             (unless (or (string-match "^ *$" c)
+                         (string-match "^ *<[0-9]+> *$" c))
+               (throw 'break nil))))))))
+
+(defun org-table-sticky-header--table-real-begin ()
+  (save-excursion
+    (goto-char (org-table-begin))
+    (while (and (not (eobp))
+                (not (org-table-sticky-header--is-header-p
+                      (buffer-substring-no-properties
+                       (point-at-bol)
+                       (point-at-eol)))))
+      (forward-line))
+    (point)))
+
 (defun org-table-sticky-header-org-table-header-visible-p ()
   (save-excursion
     (goto-char org-table-sticky-header--last-win-start)
-    (>= (org-table-begin) (point))))
+    (>= (org-table-sticky-header--table-real-begin) (point))))
 
 (defun org-table-sticky-header--get-visual-header (text visual-col)
   (if (= visual-col 0)
@@ -109,7 +131,7 @@
       (if (bobp)
           ""
         (if (org-at-table-p 'any)
-            (goto-char (org-table-begin))
+            (goto-char (org-table-sticky-header--table-real-begin))
           (forward-line -1))
         (setq visual-header
               (org-table-sticky-header--get-visual-header
