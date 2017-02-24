@@ -91,7 +91,8 @@
          (catch 'break
            (dolist (c cells ret)
              (unless (or (string-match "^ *$" c)
-                         (string-match "^ *<[0-9]+> *$" c))
+                         (string-match "^ *<[0-9]+> *$" c)
+                         (string-match "^ *<[rcl][0-9]*> *$" c))
                (throw 'break nil))))))))
 
 (defun org-table-sticky-header--table-real-begin ()
