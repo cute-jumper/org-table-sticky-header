@@ -111,6 +111,12 @@
     (goto-char org-table-sticky-header--last-win-start)
     (>= (org-table-sticky-header--table-real-begin) (point))))
 
+(defun org-table-sticky-header--get-line-prefix-width (line)
+  (let (prefix)
+    (and (bound-and-true-p org-indent-mode)
+         (setq prefix (get-text-property 0 'line-prefix line))
+         (string-width prefix))))
+
 (defun org-table-sticky-header--get-visual-header (text visual-col)
   (if (= visual-col 0)
       text
@@ -148,10 +154,16 @@
   (if (org-table-sticky-header-org-table-header-visible-p)
       (setq header-line-format org-table-sticky-header--old-header-line-format)
     ;; stole from `semantic-stickyfunc-mode'
-    (setq header-line-format
-          '(:eval (list
-                   (propertize " " 'display '((space :align-to 0)))
-                   (org-table-sticky-header-get-org-table-header))))))
+    (let ((line (org-table-sticky-header-get-org-table-header)))
+      (setq header-line-format
+            `(:eval (list
+                     (propertize
+                      " "
+                      'display
+                      '((space :align-to
+                               ,(or (org-table-sticky-header--get-line-prefix-width line)
+                                    0))))
+                     ,line))))))
 
 (defun org-table-sticky-header--scroll-function (win start-pos)
   (unless (= org-table-sticky-header--last-win-start start-pos)
