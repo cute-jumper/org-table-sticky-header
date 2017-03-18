@@ -168,7 +168,8 @@
 (defun org-table-sticky-header--scroll-function (win start-pos)
   (unless (= org-table-sticky-header--last-win-start start-pos)
     (setq org-table-sticky-header--last-win-start start-pos)
-    (org-table-sticky-header--fetch-header)))
+    (save-match-data
+      (org-table-sticky-header--fetch-header))))
 
 ;;;###autoload
 (define-minor-mode org-table-sticky-header-mode
