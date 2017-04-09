@@ -79,6 +79,7 @@
 ;;; Code:
 
 (require 'org)
+(require 'org-table)
 
 (defvar org-table-sticky-header--last-win-start -1)
 (defvar org-table-sticky-header--old-header-line-format nil)
@@ -171,6 +172,16 @@
     (save-match-data
       (org-table-sticky-header--fetch-header))))
 
+(defun org-table-sticky-header--insert-delete-column ()
+  (if org-table-sticky-header-mode
+      (save-match-data
+        (org-table-sticky-header--fetch-header))))
+
+(defun org-table-sticky-header--table-move-column (&optional left)
+  (if org-table-sticky-header-mode
+      (save-match-data
+        (org-table-sticky-header--fetch-header))))
+
 ;;;###autoload
 (define-minor-mode org-table-sticky-header-mode
   "Sticky header for org-mode tables."
@@ -181,10 +192,16 @@
             (setq org-table-sticky-header--old-header-line-format header-line-format)
             (add-hook 'window-scroll-functions
                       'org-table-sticky-header--scroll-function 'append 'local)
+            (advice-add 'org-table-delete-column :after #'org-table-sticky-header--insert-delete-column)
+            (advice-add 'org-table-insert-column :after #'org-table-sticky-header--insert-delete-column)
+            (advice-add 'org-table-move-column :after #'org-table-sticky-header--table-move-column)
             (setq org-table-sticky-header--last-win-start (window-start))
             (org-table-sticky-header--fetch-header))
         (setq org-table-sticky-header-mode nil)
         (error "Not in `org-mode'"))
+    (advice-remove 'org-table-delete-column #'org-table-sticky-header--insert-delete-column)
+    (advice-remove 'org-table-insert-column #'org-table-sticky-header--insert-delete-column)
+    (advice-remove 'org-table-move-column #'org-table-sticky-header--table-move-column)
     (remove-hook 'window-scroll-functions 'org-table-sticky-header--scroll-function 'local)
     (setq header-line-format org-table-sticky-header--old-header-line-format)))
 
