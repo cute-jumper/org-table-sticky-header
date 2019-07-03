@@ -112,11 +112,18 @@
     (goto-char org-table-sticky-header--last-win-start)
     (>= (org-table-sticky-header--table-real-begin) (point))))
 
+(defun org-table-sticky-header--get-display-line-number-width ()
+  (if (bound-and-true-p display-line-numbers-mode)
+      ;; 2 extra columns for padding
+      (+ 2 (line-number-display-width))
+    0))
+
 (defun org-table-sticky-header--get-line-prefix-width (line)
   (let (prefix)
-    (and (bound-and-true-p org-indent-mode)
-         (setq prefix (get-text-property 0 'line-prefix line))
-         (string-width prefix))))
+    (or (and (bound-and-true-p org-indent-mode)
+             (setq prefix (get-text-property 0 'line-prefix line))
+             (string-width prefix))
+        0)))
 
 (defun org-table-sticky-header--get-visual-header (text visual-col)
   (if (= visual-col 0)
@@ -162,8 +169,8 @@
                       " "
                       'display
                       '((space :align-to
-                               ,(or (org-table-sticky-header--get-line-prefix-width line)
-                                    0))))
+                               ,(+ (org-table-sticky-header--get-display-line-number-width)
+                                   (org-table-sticky-header--get-line-prefix-width line)))))
                      ,line))))))
 
 (defun org-table-sticky-header--scroll-function (win start-pos)
