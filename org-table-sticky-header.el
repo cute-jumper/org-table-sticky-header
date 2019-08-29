@@ -171,7 +171,9 @@
                       '((space :align-to
                                ,(+ (org-table-sticky-header--get-display-line-number-width)
                                    (org-table-sticky-header--get-line-prefix-width line)))))
-                     ,line))))))
+                     (propertize
+                      ,line
+                      'face '(:inherit 'default))))))
 
 (defun org-table-sticky-header--scroll-function (win start-pos)
   (unless (= org-table-sticky-header--last-win-start start-pos)
