@@ -81,6 +81,11 @@
 (require 'org)
 (require 'org-table)
 
+(defface org-table-sticky-header-face
+  '((t :inherit 'default))
+  "Face for org-table-sticky-header."
+  :group 'org-faces)
+
 (defvar org-table-sticky-header--last-win-start -1)
 (defvar org-table-sticky-header--old-header-line-format nil)
 
@@ -173,7 +178,7 @@
                                    (org-table-sticky-header--get-line-prefix-width line)))))
                      (propertize
                       ,line
-                      'face '(:inherit 'default))))))))
+                      'face 'org-table-sticky-header-face)))))))
 
 (defun org-table-sticky-header--scroll-function (win start-pos)
   (unless (= org-table-sticky-header--last-win-start start-pos)
